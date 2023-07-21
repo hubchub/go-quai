@@ -257,12 +257,16 @@ func (sl *Slice) Append(header *types.Header, domPendingHeader *types.Header, do
 
 		subReorg = sl.miningStrategy(nodeCtx, order, bestPh, newTermini, block, subReorg)
 		if subReorg {
-
 			err = sl.hc.AppendBlock(block, newInboundEtxs.FilterToLocation(common.NodeLocation))
 			if err != nil {
 				return nil, false, err
 			}
+		}
 
+		if order < nodeCtx {
+			// Store the inbound etxs for dom blocks that did not get picked and use
+			// it in the future if dom switch happens
+			rawdb.WriteInboundEtxs(batch, block.Hash(), newInboundEtxs.FilterToLocation(common.NodeLocation))
 		}
 
 		sl.reorgMu.Lock()
