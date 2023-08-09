@@ -428,7 +428,7 @@ func DefaultGalenaGenesisBlock(consensusEngine string) *Genesis {
 		Nonce:      0,
 		ExtraData:  hexutil.MustDecode("0x3535353535353535353535353535353535353535353535353535353535353537"),
 		GasLimit:   5000000,
-		Difficulty: big.NewInt(1000),
+		Difficulty: big.NewInt(100000000),
 	}
 }
 
@@ -448,7 +448,7 @@ func DefaultLocalGenesisBlock(consensusEngine string) *Genesis {
 		Nonce:      0,
 		ExtraData:  hexutil.MustDecode("0x3535353535353535353535353535353535353535353535353535353535353535"),
 		GasLimit:   5000000,
-		Difficulty: big.NewInt(1000),
+		Difficulty: big.NewInt(100000000),
 	}
 }
 
