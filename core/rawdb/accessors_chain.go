@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"math/big"
 	"sort"
 
@@ -802,6 +803,11 @@ func ReadRawReceipts(db ethdb.Reader, hash common.Hash, number uint64) types.Rec
 func ReadReceipts(db ethdb.Reader, hash common.Hash, number uint64, config *params.ChainConfig) types.Receipts {
 	// We're deriving many fields from the block body, retrieve beside the receipt
 	receipts := ReadRawReceipts(db, hash, number)
+    fmt.Println("raw receipts",receipts)
+    if (len(receipts) > 0) {
+        fmt.Println("raw receipts [0]",receipts[0])
+        fmt.Println("raw receipts [0] etxs",receipts[0].Etxs)
+    }
 	if receipts == nil {
 		return nil
 	}
@@ -822,9 +828,20 @@ func WriteReceipts(db ethdb.KeyValueWriter, hash common.Hash, number uint64, rec
 	// Convert the receipts into their storage form and serialize them
 	storageReceipts := make([]*types.ReceiptForStorage, len(receipts))
 	for i, receipt := range receipts {
+        fmt.Println("writing receipt:",receipt)
+        fmt.Println("reciept Etxs", receipt.Etxs)
 		storageReceipts[i] = (*types.ReceiptForStorage)(receipt)
 	}
 	bytes, err := rlp.EncodeToBytes(storageReceipts)
+    
+    var decode []*types.ReceiptForStorage
+    rlp.DecodeBytes(bytes, &decode)
+
+    fmt.Println("decode",decode)
+    if (len(decode) > 0) {
+        fmt.Println("decode first receipt",decode[0])
+        fmt.Println("decode first receipt etxs",decode[0].Etxs)
+    }
 	if err != nil {
 		log.Fatal("Failed to encode block receipts", "err", err)
 	}

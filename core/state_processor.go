@@ -540,13 +540,20 @@ func (p *StateProcessor) HasBlockAndState(hash common.Hash, number uint64) bool 
 // GetReceiptsByHash retrieves the receipts for all transactions in a given block.
 func (p *StateProcessor) GetReceiptsByHash(hash common.Hash) types.Receipts {
 	if receipts, ok := p.receiptsCache.Get(hash); ok {
+        fmt.Println("receipts from cache:", receipts.(types.Receipts))
+        fmt.Println("from receipt from cache:", receipts.(types.Receipts)[0])
+        fmt.Println("first etx first receipt from cache:", receipts.(types.Receipts)[0].Etxs)
 		return receipts.(types.Receipts)
 	}
 	number := rawdb.ReadHeaderNumber(p.hc.headerDb, hash)
+    fmt.Println("number:", number)
 	if number == nil {
 		return nil
 	}
 	receipts := rawdb.ReadReceipts(p.hc.headerDb, hash, *number, p.hc.config)
+    fmt.Println("receipts:", receipts)
+    fmt.Println("first receipt:", receipts[0])
+    fmt.Println("first etx from receipt :", receipts[0].Etxs)
 	if receipts == nil {
 		return nil
 	}
