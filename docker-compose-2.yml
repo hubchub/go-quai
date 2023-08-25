@@ -1,0 +1,10 @@
+services:
+  test:
+    env_file:
+      - network.env
+    environment:
+      - TCP_PORT=30303
+      - HTTP_PORT=8546
+      - WS_PORT=8547
+    build: .
+    command: sh -c 'echo --$$NETWORK'
